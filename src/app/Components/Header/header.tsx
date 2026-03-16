@@ -6,7 +6,6 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Navbar, Button } from "@nextui-org/react";
-import { Link as ScrollLink } from "react-scroll";
 import { Lexend } from "next/font/google";
 import { BannerAdvertising } from "../UI/Banners/bannerAdvertising";
 
@@ -96,13 +95,10 @@ export const Header: FC = () => {
                 className={s.wrapper}
               >
                 <nav className={s.nav}>
-                  <ScrollLink
+                  <Link
                     className={`${s.logo} hover:opacity-80 transition-opacity cursor-pointer`}
                     onClick={closeMenu}
-                    spy={true}
-                    smooth={true}
-                    duration={800}
-                    to={"top"}
+                    href="/#top"
                   >
                     <Image
                       src={"./Logo.svg"}
@@ -113,23 +109,16 @@ export const Header: FC = () => {
                     <h5 style={font.style} className="text-black text-lg">
                       Tax<span className="text-blue">Pal</span>
                     </h5>
-                  </ScrollLink>
+                  </Link>
                   <ul className="hidden md:grid">
                     {NAV_LINKS.map((link, i) => (
-                      <ScrollLink
+                      <Link
                         key={i}
                         className="transition-all text-sm hover:text-blue hover:bg-slate-100 px-3 py-2 rounded-lg cursor-pointer"
-                        activeStyle={{
-                          backgroundColor: "#f1f5f9",
-                          color: "#2563EB",
-                        }}
-                        to={link.href}
-                        spy={true}
-                        smooth={true}
-                        duration={800}
+                        href={`/#${link.href}`}
                       >
                         {link.value}
-                      </ScrollLink>
+                      </Link>
                     ))}
                   </ul>
                 </nav>
@@ -214,13 +203,10 @@ export const Header: FC = () => {
                 >
                   {/* Drawer header */}
                   <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100">
-                    <ScrollLink
+                    <Link
                       className="flex items-center gap-2.5 cursor-pointer"
                       onClick={closeMenu}
-                      spy={true}
-                      smooth={true}
-                      duration={800}
-                      to={"top"}
+                      href="/#top"
                     >
                       <Image
                         src={"./Logo.svg"}
@@ -234,7 +220,7 @@ export const Header: FC = () => {
                       >
                         Tax<span className="text-blue">Pal</span>
                       </span>
-                    </ScrollLink>
+                    </Link>
                     <button
                       aria-label="Close menu"
                       onClick={closeMenu}
@@ -269,20 +255,13 @@ export const Header: FC = () => {
                           initial="hidden"
                           animate="visible"
                         >
-                          <ScrollLink
+                          <Link
                             onClick={closeMenu}
-                            spy={true}
-                            smooth={true}
-                            duration={800}
-                            to={item.href}
-                            activeStyle={{
-                              backgroundColor: "#eff6ff",
-                              color: "#2563EB",
-                            }}
+                            href={`/#${item.href}`}
                             className="flex items-center gap-3 px-3 py-3 rounded-xl text-slate-700 text-base font-medium hover:bg-slate-100 hover:text-blue transition-colors cursor-pointer"
                           >
                             {item.value}
-                          </ScrollLink>
+                          </Link>
                         </motion.li>
                       ))}
                     </ul>

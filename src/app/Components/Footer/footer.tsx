@@ -2,7 +2,6 @@
 import { FC, useState } from "react";
 import { FaTwitter, FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { GoArrowRight } from "react-icons/go";
-import { Link as ScrollLink } from "react-scroll";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -49,10 +48,7 @@ const fadeUp = {
 
 export const Footer: FC = () => {
   const pathName = usePathname().replace("/", "");
-  const isAuthPage = pathName === "signIn" || pathName === "signUp";
-  const isInternalNotFound = pathName === "_not-found";
-  const hideFooter = isAuthPage || isInternalNotFound;
-
+  const hideFooter = pathName === "signIn" || pathName === "signUp";
   const year = new Date().getFullYear();
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -125,11 +121,8 @@ export const Footer: FC = () => {
                 variants={fadeUp}
                 className="lg:col-span-2 flex flex-col gap-5"
               >
-                <ScrollLink
-                  spy
-                  smooth
-                  duration={800}
-                  to="top"
+                <Link
+                  href="/#top"
                   className="flex items-center gap-2.5 cursor-pointer hover:opacity-80 transition-opacity w-fit"
                 >
                   <Image
@@ -141,7 +134,7 @@ export const Footer: FC = () => {
                   <span className="text-white font-semibold text-lg">
                     Tax<span className="text-blue">Pal</span>
                   </span>
-                </ScrollLink>
+                </Link>
                 <p className="text-slate-400 text-sm leading-relaxed max-w-xs">
                   Accounting made simple for small businesses. We make the
                   opposite trade-off — and hope you don&apos;t get audited.
@@ -196,15 +189,12 @@ export const Footer: FC = () => {
                     {items.map((item, i) =>
                       "scroll" in item ? (
                         <li key={i}>
-                          <ScrollLink
-                            spy
-                            smooth
-                            duration={800}
-                            to={item.scroll}
+                          <Link
+                            href={`/#${item.scroll}`}
                             className="text-sm text-slate-400 hover:text-white transition-colors cursor-pointer"
                           >
                             {item.label}
-                          </ScrollLink>
+                          </Link>
                         </li>
                       ) : (
                         <li key={i}>

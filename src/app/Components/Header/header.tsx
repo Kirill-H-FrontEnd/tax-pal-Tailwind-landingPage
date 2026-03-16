@@ -1,85 +1,87 @@
 "use client";
-// React
 import { FC, useEffect, useState } from "react";
-// Animation
-import { motion } from "framer-motion";
-// Styles
+import { motion, AnimatePresence } from "framer-motion";
 import s from "./styles/Header.module.scss";
-// Next
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-// NextUI
-import {
-  Navbar,
-  NavbarMenuToggle,
-  NavbarMenu,
-  NavbarMenuItem,
-  Button,
-} from "@nextui-org/react";
-// ScrollLink
+import { Navbar, Button } from "@nextui-org/react";
 import { Link as ScrollLink } from "react-scroll";
-// Font
 import { Lexend } from "next/font/google";
 import { BannerAdvertising } from "../UI/Banners/bannerAdvertising";
-const font = Lexend({
-  subsets: ["latin"],
-  weight: ["500"],
-});
 
-export const Header: FC = ({}) => {
+const font = Lexend({ subsets: ["latin"], weight: ["500"] });
+
+const NAV_LINKS = [
+  { value: "Features", href: "features" },
+  { value: "Testimonials", href: "testimonials" },
+  { value: "Pricing", href: "price" },
+  { value: "FAQ", href: "faq" },
+];
+
+export const Header: FC = () => {
   const pathName = usePathname().replace("/", "");
-  let hideNavigation = pathName === "signIn" || pathName === "signUp";
+  const hideNavigation = pathName === "signIn" || pathName === "signUp";
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScroll, setScroll] = useState(false);
 
-  // Data
-  const DATA_LINKS = [
-    { value: "Features", href: "features" },
-    { value: "Testimonials", href: "testimonials" },
-    { value: "Pricing", href: "price" },
-    { value: "FAQ", href: "faq" },
-  ];
-  const DATA_TOGGLE_MENU = [
-    { value: "Features", href: "features" },
-    { value: "Testimonials", href: "testimonials" },
-    { value: "Pricing", href: "price" },
-    { value: "FAQ", href: "faq" },
-  ];
-  // SetScroll
   useEffect(() => {
-    window.addEventListener("scroll", () => {
-      if (window.scrollY != 0) {
-        setScroll(true);
-      } else {
-        setScroll(false);
-      }
-    });
-  }, [isScroll]);
-  // Animation
-  const animation = {
-    hidden: {
-      opacity: 0,
-    },
-    visible: (custom: number) => ({
+    const handleScroll = () => setScroll(window.scrollY !== 0);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = isMenuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMenuOpen]);
+
+  const closeMenu = () => setIsMenuOpen(false);
+
+  const headerAnimation = {
+    hidden: { opacity: 0 },
+    visible: {
       opacity: 1,
       transition: { delay: 0.1, duration: 0.3, ease: "easeOut" },
+    },
+  };
+
+  const drawerVariants = {
+    hidden: { x: "100%" },
+    visible: {
+      x: 0,
+      transition: { type: "spring", damping: 28, stiffness: 300 },
+    },
+    exit: { x: "100%", transition: { duration: 0.22, ease: "easeIn" } },
+  };
+
+  const overlayVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { duration: 0.2 } },
+    exit: { opacity: 0, transition: { duration: 0.22 } },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, x: 20 },
+    visible: (i: number) => ({
+      opacity: 1,
+      x: 0,
+      transition: { delay: 0.05 + i * 0.07, duration: 0.3, ease: "easeOut" },
     }),
   };
+
   return (
     <>
       {!hideNavigation && (
         <>
           <BannerAdvertising />
           <Navbar
-            className={` ${s.navBar}  ${
-              isScroll ? "shadow-sm shadow-black/10" : ""
-            }  `}
+            className={`${s.navBar} ${isScroll ? "shadow-sm shadow-black/10" : ""}`}
             isBlurred={!isMenuOpen}
             shouldHideOnScroll
             disableAnimation
-            onMenuOpenChange={setIsMenuOpen}
-            isMenuOpen={isMenuOpen}
             maxWidth="full"
             height={"4.5em"}
           >
@@ -88,13 +90,13 @@ export const Header: FC = ({}) => {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
-                variants={animation}
+                variants={headerAnimation}
                 className={s.wrapper}
               >
                 <nav className={s.nav}>
                   <ScrollLink
                     className={`${s.logo} hover:opacity-80 transition-opacity cursor-pointer`}
-                    onClick={() => setIsMenuOpen(false)}
+                    onClick={closeMenu}
                     spy={true}
                     smooth={true}
                     duration={800}
@@ -106,19 +108,19 @@ export const Header: FC = ({}) => {
                       height={40}
                       alt="Logo"
                     />
-                    <h5 style={font.style} className="text-black  text-lg">
-                      Tax<span className="text-blue ">Pal</span>
+                    <h5 style={font.style} className="text-black text-lg">
+                      Tax<span className="text-blue">Pal</span>
                     </h5>
                   </ScrollLink>
                   <ul className="hidden md:grid">
-                    {DATA_LINKS.map((link, i) => (
+                    {NAV_LINKS.map((link, i) => (
                       <ScrollLink
-                        className={`transition-all text-sm  hover:text-blue hover:bg-slate-100 px-3 py-2 rounded-lg cursor-pointer`}
+                        key={i}
+                        className="transition-all text-sm hover:text-blue hover:bg-slate-100 px-3 py-2 rounded-lg cursor-pointer"
                         activeStyle={{
                           backgroundColor: "#f1f5f9",
                           color: "#2563EB",
                         }}
-                        key={i}
                         to={link.href}
                         spy={true}
                         smooth={true}
@@ -129,6 +131,7 @@ export const Header: FC = ({}) => {
                     ))}
                   </ul>
                 </nav>
+
                 <div className={s.actions}>
                   <Link
                     className="hidden md:inline-block transition-all text-sm text-slate-700 hover:text-blue hover:bg-slate-100 px-3 py-2 rounded-lg"
@@ -138,38 +141,186 @@ export const Header: FC = ({}) => {
                   </Link>
                   <Button
                     as={Link}
-                    className="bg-blue text-white py-2 px-3 rounded-full text-sm font-medium hover:bg-white hover:text-blue  transition-all border-2 border-blue shadow-md"
+                    className="bg-blue text-white py-2 px-3 rounded-full text-sm font-medium hover:bg-white hover:text-blue transition-all border-2 border-blue shadow-md"
                     href={"/signUp"}
                   >
                     Get started{" "}
                     <span className="hidden lg:inline-block">today</span>
                   </Button>
-                  {/* BurgerMenu */}
-                  <NavbarMenuToggle className="sm:hidden" />
+
+                  {/* Burger button — visible below md */}
+                  <button
+                    aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+                    aria-expanded={isMenuOpen}
+                    onClick={() => setIsMenuOpen((v) => !v)}
+                    className="md:hidden flex flex-col justify-center items-center w-9 h-9 gap-[5px] rounded-lg hover:bg-slate-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue"
+                  >
+                    <motion.span
+                      animate={
+                        isMenuOpen ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }
+                      }
+                      transition={{ duration: 0.22 }}
+                      className="block w-5 h-0.5 bg-slate-700 rounded-full origin-center"
+                    />
+                    <motion.span
+                      animate={
+                        isMenuOpen
+                          ? { opacity: 0, scaleX: 0 }
+                          : { opacity: 1, scaleX: 1 }
+                      }
+                      transition={{ duration: 0.15 }}
+                      className="block w-5 h-0.5 bg-slate-700 rounded-full"
+                    />
+                    <motion.span
+                      animate={
+                        isMenuOpen
+                          ? { rotate: -45, y: -7 }
+                          : { rotate: 0, y: 0 }
+                      }
+                      transition={{ duration: 0.22 }}
+                      className="block w-5 h-0.5 bg-slate-700 rounded-full origin-center"
+                    />
+                  </button>
                 </div>
               </motion.section>
             </div>
-            {/* ToggleMenu */}
-            <NavbarMenu className={`navbarMenu pt-5 bg-slate-50`}>
-              {DATA_TOGGLE_MENU.map((item, i) => (
-                <NavbarMenuItem key={i}>
-                  <ScrollLink
-                    activeStyle={{
-                      color: "#2563EB",
-                    }}
-                    onClick={() => setIsMenuOpen(false)}
-                    spy={true}
-                    smooth={true}
-                    duration={800}
-                    className={`w-full`}
-                    to={item.href}
-                  >
-                    {item.value}
-                  </ScrollLink>
-                </NavbarMenuItem>
-              ))}
-            </NavbarMenu>
           </Navbar>
+
+          {/* Mobile drawer */}
+          <AnimatePresence>
+            {isMenuOpen && (
+              <>
+                {/* Backdrop */}
+                <motion.div
+                  key="overlay"
+                  variants={overlayVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  onClick={closeMenu}
+                  className="fixed inset-0 bg-black/40 backdrop-blur-[2px] z-[998] md:hidden"
+                />
+
+                {/* Drawer */}
+                <motion.div
+                  key="drawer"
+                  variants={drawerVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  className="fixed top-0 right-0 h-full w-[min(320px,85vw)] bg-white shadow-2xl z-[999] md:hidden flex flex-col"
+                >
+                  {/* Drawer header */}
+                  <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100">
+                    <ScrollLink
+                      className="flex items-center gap-2.5 cursor-pointer"
+                      onClick={closeMenu}
+                      spy={true}
+                      smooth={true}
+                      duration={800}
+                      to={"top"}
+                    >
+                      <Image
+                        src={"./Logo.svg"}
+                        width={32}
+                        height={32}
+                        alt="Logo"
+                      />
+                      <span
+                        style={font.style}
+                        className="text-black text-base font-medium"
+                      >
+                        Tax<span className="text-blue">Pal</span>
+                      </span>
+                    </ScrollLink>
+                    <button
+                      aria-label="Close menu"
+                      onClick={closeMenu}
+                      className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors text-slate-500"
+                    >
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 18 18"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      >
+                        <line x1="2" y1="2" x2="16" y2="16" />
+                        <line x1="16" y1="2" x2="2" y2="16" />
+                      </svg>
+                    </button>
+                  </div>
+
+                  {/* Nav links */}
+                  <nav className="flex-1 px-4 py-6 overflow-y-auto">
+                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider px-3 mb-3">
+                      Navigation
+                    </p>
+                    <ul className="flex flex-col gap-1">
+                      {NAV_LINKS.map((item, i) => (
+                        <motion.li
+                          key={i}
+                          custom={i}
+                          variants={itemVariants}
+                          initial="hidden"
+                          animate="visible"
+                        >
+                          <ScrollLink
+                            onClick={closeMenu}
+                            spy={true}
+                            smooth={true}
+                            duration={800}
+                            to={item.href}
+                            activeStyle={{
+                              backgroundColor: "#eff6ff",
+                              color: "#2563EB",
+                            }}
+                            className="flex items-center gap-3 px-3 py-3 rounded-xl text-slate-700 text-base font-medium hover:bg-slate-100 hover:text-blue transition-colors cursor-pointer"
+                          >
+                            {item.value}
+                          </ScrollLink>
+                        </motion.li>
+                      ))}
+                    </ul>
+                  </nav>
+
+                  {/* CTA section */}
+                  <div className="px-4 py-6 border-t border-slate-100 flex flex-col gap-3">
+                    <motion.div
+                      custom={NAV_LINKS.length}
+                      variants={itemVariants}
+                      initial="hidden"
+                      animate="visible"
+                    >
+                      <Link
+                        href="/signIn"
+                        onClick={closeMenu}
+                        className="flex items-center justify-center w-full py-2.5 px-4 rounded-xl border border-slate-200 text-slate-700 text-sm font-medium hover:bg-slate-50 hover:border-slate-300 transition-colors"
+                      >
+                        Sign In
+                      </Link>
+                    </motion.div>
+                    <motion.div
+                      custom={NAV_LINKS.length + 1}
+                      variants={itemVariants}
+                      initial="hidden"
+                      animate="visible"
+                    >
+                      <Link
+                        href="/signUp"
+                        onClick={closeMenu}
+                        className="flex items-center justify-center w-full py-2.5 px-4 rounded-xl bg-blue text-white text-sm font-medium hover:opacity-90 transition-opacity border-2 border-blue"
+                      >
+                        Get started today
+                      </Link>
+                    </motion.div>
+                  </div>
+                </motion.div>
+              </>
+            )}
+          </AnimatePresence>
         </>
       )}
     </>

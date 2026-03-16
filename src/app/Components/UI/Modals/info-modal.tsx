@@ -3,7 +3,10 @@ import { FC, useEffect, useState } from "react";
 import { ButtonLink } from "../Button/buttonLink";
 import { Github, Linkedin, X } from "lucide-react";
 import s from "./info-modal.module.scss";
+import { usePathname } from "next/navigation";
 export const InfoModal: FC = ({}) => {
+  const pathName = usePathname().replace("/", "");
+  const isInternalNotFound = pathName === "_not-found";
   const [isClose, setClose] = useState(true);
 
   useEffect(() => {
@@ -23,7 +26,7 @@ export const InfoModal: FC = ({}) => {
 
   return (
     <>
-      {isClose && (
+      {isClose && !isInternalNotFound && (
         <article
           className={`${s.wrapper} fixed bottom-0 left-0 sm:bottom-4 sm:left-4 z-[100] border-t-1 sm:border-1 border-slate-200 sm:rounded-md p-3 w-full sm:max-w-[500px] bg-white/80 backdrop-blur-lg sm:shadow-md`}
         >

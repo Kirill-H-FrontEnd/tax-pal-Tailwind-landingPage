@@ -49,7 +49,10 @@ const fadeUp = {
 
 export const Footer: FC = () => {
   const pathName = usePathname().replace("/", "");
-  const hideFooter = pathName === "signIn" || pathName === "signUp";
+  const isAuthPage = pathName === "signIn" || pathName === "signUp";
+  const isInternalNotFound = pathName === "_not-found";
+  const hideFooter = isAuthPage || isInternalNotFound;
+
   const year = new Date().getFullYear();
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);

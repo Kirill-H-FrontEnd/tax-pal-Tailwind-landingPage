@@ -21,7 +21,9 @@ const NAV_LINKS = [
 
 export const Header: FC = () => {
   const pathName = usePathname().replace("/", "");
-  const hideNavigation = pathName === "signIn" || pathName === "signUp";
+  const isAuthPage = pathName === "signIn" || pathName === "signUp";
+  const isInternalNotFound = pathName === "_not-found";
+  const hideNavigation = isAuthPage || isInternalNotFound;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScroll, setScroll] = useState(false);
 

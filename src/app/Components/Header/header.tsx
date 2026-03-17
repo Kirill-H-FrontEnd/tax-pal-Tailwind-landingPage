@@ -78,9 +78,7 @@ export const Header: FC = () => {
       {!hideNavigation && (
         <>
           <BannerAdvertising />
-          <header
-            className={`${s.navBar} ${isScroll ? "shadow-sm shadow-black/10" : ""}`}
-          >
+          <header className={`${s.navBar} py-4 `}>
             <div className="container">
               <motion.section
                 initial="hidden"

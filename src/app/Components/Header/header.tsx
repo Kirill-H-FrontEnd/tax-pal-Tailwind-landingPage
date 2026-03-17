@@ -5,7 +5,7 @@ import s from "./styles/Header.module.scss";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { Navbar, Button } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { Lexend } from "next/font/google";
 import { BannerAdvertising } from "../UI/Banners/bannerAdvertising";
 
@@ -78,13 +78,8 @@ export const Header: FC = () => {
       {!hideNavigation && (
         <>
           <BannerAdvertising />
-          <Navbar
+          <header
             className={`${s.navBar} ${isScroll ? "shadow-sm shadow-black/10" : ""}`}
-            isBlurred={!isMenuOpen}
-            shouldHideOnScroll
-            disableAnimation
-            maxWidth="full"
-            height={"4.5em"}
           >
             <div className="container">
               <motion.section
@@ -175,7 +170,7 @@ export const Header: FC = () => {
                 </div>
               </motion.section>
             </div>
-          </Navbar>
+          </header>
 
           {/* Mobile drawer */}
           <AnimatePresence>

@@ -56,3 +56,4 @@ TaxPal is a fictional company created for demonstration purposes only. Any resem
 
 While TaxPal isn't a real company, your contributions to this project are real and valued! Feel free to open issues or submit pull requests if you have ideas for improvements. Thank you!
 # tax-pal-Tailwind-landingPage
+# tax-pal-Tailwind-landingPage
